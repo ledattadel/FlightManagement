@@ -1,0 +1,131 @@
+//AVLTree  DeleteNode(AVLTree  root,HanhKhach& HanhKhach,AVLTree & stockPointer){
+//	if(root==NULL) return root;
+//	
+//	if(HanhKhach<root->HanhKhach) root->pLeft=DeleteNode(root->pLeft,HanhKhach,stockPointer);
+//	else if(HanhKhach>root->HanhKhach) root->pRight=DeleteNode(root->pRight,HanhKhach,stockPointer);
+//	else{//Truong hop bang
+//		if(root->pRight==NULL||root->pLeft==NULL){//nut nay chua mot nut la hoac khong chu nut la nao, truong hop khong can xoay cay
+//			AVLTree  tmp=root->pRight?root->pRight:root->pLeft;
+//			
+//			if(tmp==NULL){//Truong hop nay khong can cap nhat lai cay
+//				stockPointer=root;
+//				return tmp;
+//			}
+//			else{//Do cao giam co the anh huong toi do cao cua nut cha
+//				*root=*tmp;//xoa root, dua AVLNode len cho root
+////				root->pLeft=NULL;
+////				root->pRight=NULL;
+////				s
+//				//Xoa vung nho cua tmp
+//				stockPointer=tmp;
+//			}
+//			
+//		}
+//		else { //Lay nut cuc trai
+//			AVLTree  tmp=GetMinValueNode(root->pRight);//Nut cuc trai cua cay con ben phai
+//			root->HanhKhach=tmp->HanhKhach;//Lay noi dung cu nut cuc trai
+//			
+//			root->pRight=DeleteNode(root->pRight,tmp->HanhKhach,stockPointer);//Xoa nut cuc trai;
+//			
+//		}
+//	}
+//	//Can bang lai cay
+//	root->height=max(GetNodeHeight(root->pLeft),GetNodeHeight(root->pRight))+1;
+//	int bf=GetNodeBalanceFactor(root);	
+//		
+//	if(bf>1&&GetNodeBalanceFactor(root->pLeft)>=0){//pLeft pLeft
+//		return RightRotate(root);
+//	}
+//	else if(bf>1&&GetNodeBalanceFactor(root->pLeft)<0){//pLeft pRight
+//		root->pLeft=LeftRotate(root->pLeft);
+//		return RightRotate(root);
+//	}
+//	else if(bf<-1&&GetNodeBalanceFactor(root->pRight)<=0){//pRight pRight
+//		return LeftRotate(root);
+//	}
+//	else if(bf<-1&&GetNodeBalanceFactor(root->pRight)>0){//pRight pLeft
+//		root->pRight=RightRotate(root->pRight);
+//		return LeftRotate(root);
+//	}
+//	return root;
+//}
+//
+//AVLTree  DeleteNode(AVLTree  pos,AVLTree  &stockPointer){
+//	if(pos==NULL) return NULL;
+//	cout<<"Call"<<endl;
+//	if(pos->pRight==NULL||pos->pLeft==NULL){//nut nay chua mot nut la hoac khong chu nut la nao, truong hop khong can xoay cay
+//			AVLTree  tmp=pos->pRight!=NULL?pos->pRight:pos->pLeft;
+//			
+//			if(tmp==NULL){//Truong hop nay khong can cap nhat lai cay
+////				delete pos;
+//
+//				stockPointer=pos;
+//				return NULL;
+//			}
+//			else{//Do cao giam co the anh huong toi do cao cua nut cha
+//				*pos=*tmp;//xoa pos, dua AVLNode len cho pos
+//				stockPointer=tmp;
+//				//Xoa vung nho cua tmp
+////				delete tmp;
+//			}
+//			
+//		}
+//		else { //Lay nut cuc trai
+//			AVLTree  tmp=GetMinValueNode(pos->pRight);//Nut cuc trai cua cay con ben phai
+//			pos->HanhKhach=tmp->HanhKhach;//Lay noi dung cu nut cuc trai
+//			
+//			pos->pRight=DeleteNode(tmp,stockPointer);//Xoa nut cuc trai;
+//			
+//	}
+//		pos->height=max(GetNodeHeight(pos->pLeft),GetNodeHeight(pos->pRight))+1;
+//	int bf=GetNodeBalanceFactor(pos);	
+//		
+//	if(bf>1&&GetNodeBalanceFactor(pos->pLeft)>=0){//pLeft pLeft
+//		return RightRotate(pos);
+//	}
+//	else if(bf>1&&GetNodeBalanceFactor(pos->pLeft)<0){//pLeft pRight
+//		pos->pLeft=LeftRotate(pos->pLeft);
+//		return RightRotate(pos);
+//	}
+//	else if(bf<-1&&GetNodeBalanceFactor(pos->pRight)<=0){//pRight pRight
+//		return LeftRotate(pos);
+//	}
+//	else if(bf<-1&&GetNodeBalanceFactor(pos->pRight)>0){//pRight pLeft
+//		pos->pRight=RightRotate(pos->pRight);
+//		return LeftRotate(pos);
+//	}
+//	return pos;
+//}
+//void PrintOrder(AVLTree  p){
+//	if(p!=NULL){
+//		cout<<p->HanhKhach.code<<' '<<p->HanhKhach.name<<' '<<p->HanhKhach.unit<<' '<<p->HanhKhach.amount<<endl;
+//		PrintOrder(p->pLeft);
+//		PrintOrder(p->pRight);
+//	}
+//}
+//
+//int partition ( AVLNode * A[],int start ,int end) {
+//    int i = start + 1;
+//    char piv[51];
+//    strcpy(piv,A[start]->HanhKhach.name);         
+//    for(int j =start + 1; j <= end ; j++ )  {
+//          if (strcmp(A[j]->HanhKhach.name,piv)<0){
+//                 swap (A[ i ],A [ j ]);
+//            i += 1;
+//        }
+//   }
+//   swap ( A[ start ],A[ i-1 ]) ;  
+//   return i-1;                      
+//}
+//
+//void Quick_sort ( AVLTree  parr[] ,int start , int end ) {
+//	 cout<<"sfsdf"<<endl;
+//   if( start < end ) {
+//   	 cout<<"Vall"<<endl;
+//         int piv_pos = partition (parr,start , end ) ;     
+//         Quick_sort (parr,start , piv_pos -1);  
+//         Quick_sort ( parr,piv_pos +1 , end) ; 
+//   }
+//}
+//
+//

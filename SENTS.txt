@@ -1,0 +1,1281 @@
+//DEN 400 XU LY LAI
+
+#include <iostream>
+#include<windows.h>
+#include <string.h>
+#include <stdio.h>
+#include "mylib.h"
+#include <fstream>
+#include <ctype.h>
+#include <ctime>
+#include <conio.h>
+#include <sstream> 
+#include <string>
+#include<cstdlib>
+#include"AVLhanhkhach.h"
+#include"XuLyVe.h"
+#define MAXMB 300
+#define MAXVE 30
+
+#define MAX 100
+#define UP 72
+#define DOWN 80
+#define BACKSPACE 8
+#define ENTER 13
+#define ESC 27
+#define RIGHT 77
+#define LEFT 75
+
+#define F1 59
+#define F2 60
+#define F3 61
+#define F4 62
+
+
+#define ArrowRIGHT 27
+#define ArrowLEFT 26
+#define ArrowUP 25
+#define ArrowDOWN 24
+
+#define boxx 80 //Vi tri x bat dau cua box
+#define boxy 14 //Vi tri y bat dau cua box
+#define boxxCB 60
+#define boxyCB 14
+#define boxs 70 //Box size
+#define tabx 75 // vi tri x bat dau cua table 	//	gotoxy(100, 12);//35 2 100 13 19,6 => tabx = 80 
+#define taby 12  // vi tri y bat dau cua table
+#define tabxCB 55
+
+#define tabs 83 // table box
+#define tabw 23 // table hight
+
+#define ColorBLACK			0
+#define ColorDARKBLUE		1
+#define ColorDARKCYAN		3
+#define ColorCDARKRED		4
+#define ColorPURPLE			5
+#define ColorDARKYELLOW		6
+#define ColorDARKWHITE		7
+#define ColorGRAY			8
+#define ColorBLUE			9
+#define ColorGREEN		 	10
+#define ColorCYAN			11
+#define ColorRED			12
+#define ColorPINK			13
+#define ColorYELLOW			14
+#define ColorWHITE			255
+
+//== dinh nghia hang so AVL
+
+#define LH -1
+
+#define EH 0
+
+#define RH 1
+
+
+
+
+
+//=====================================================
+using namespace std;
+
+
+
+struct ListVe{
+	int n;
+//	char cmnd[16];
+	string *ve;
+
+};
+
+struct ThoiGian{
+	int gio, phut, ngay, thang, nam;
+};
+
+// ==========================
+
+// ========== CHUYEN BAY ============
+struct ChuyenBay{
+	char maCB[16];
+	ThoiGian tgKhoiHanh;
+	char sanBayDen[150];
+	int trangThai;
+	char soHieuMB[16];
+	ListVe dsVe;	 
+};
+struct Node_CB{
+	ChuyenBay cb;
+	Node_CB *pNext;
+};
+struct SingleList_CB
+{
+	Node_CB *pHead;
+	Node_CB *pTail;
+};
+
+
+
+// ========= MAY BAY==========
+struct MayBay{
+	char soHieuMB[16];
+	char loaiMB[41];
+	int soCho;
+};
+
+struct ListMayBay{
+	int soluong;
+	MayBay *maybay[MAXMB]; 
+};
+
+
+// =========== HANH KHACH ==========
+//struct HanhKhach{
+//	char cmnd[17];
+//	char ho[100];
+//	char ten[100];
+//	char phai[10]; 
+//};
+//
+//struct tagAVLNode
+//{
+//	HanhKhach data;
+//	char balFactor; // chi so can bang
+//	tagAVLNode* pLeft;
+//	tagAVLNode* pRight;
+//};
+//typedef tagAVLNode AVLNode;
+//typedef AVLNode *AVLTree;
+// 
+// 
+
+//AVLNode *CreateAVLNode(HanhKhach data){
+//	
+//        AVLNode *p = new AVLNode;
+//                if (!p) exit(1);
+// 
+//        p->balFactor = EH;
+//        p->data = data;
+//        p->pLeft = NULL;
+//        p->pRight = NULL;
+// 
+//        return p;
+//}
+// 
+//
+//int tim_chieu_cao(AVLTree t)
+//{
+//	if (t == NULL)
+//	{
+//		return 0;
+//	}
+//	else
+//	{
+//		int a = tim_chieu_cao(t->pLeft);
+//		int b = tim_chieu_cao(t->pRight);
+//		if (a > b)
+//		{
+//			return a + 1;
+//		}
+//		else
+//		{
+//			return b + 1;
+//		}
+//	}
+//}
+//
+////Quay don Left-Left
+//void rotateLL(AVLTree &T){
+//	AVLTree  T1 = T->pLeft;
+//	T->pLeft  = T1->pRight;
+//	T1->pRight = T;
+//	switch(T1->balFactor){
+//		case LH: T->balFactor = EH;
+//				 T1->balFactor = EH;break;
+//		case EH: T->balFactor = LH;
+//				 T1->balFactor = RH; break;		 
+//	}
+//	T = T1;
+//}
+//// Quay don Right-Right
+//void rotateRR(AVLTree &T)
+//{
+//	AVLTree  T1 = T->pRight;
+//	T->pRight = T1->pLeft;
+//	T1->pLeft = T;
+//	switch(T1->balFactor){
+//		case RH: T->balFactor = EH;
+//				 T1->balFactor = EH; break;
+//		case EH: T->balFactor = RH;
+//				 T1->balFactor = LH;break;		 
+//	}
+//	T = T1;
+//}
+//// Quay kep Left-Right
+//void rotateLR(AVLTree &T){
+//	AVLTree  T1 = T->pLeft;
+//	AVLTree  T2 = T1->pRight;
+//	T->pLeft = T2->pRight;
+//	T2->pRight = T;
+//	T1->pRight = T2->pLeft;
+//	T2->pLeft = T1;
+//	switch(T2->balFactor){
+//		case LH: T->balFactor = RH;
+//			 	 T1->balFactor = EH;break;
+//		case EH: T->balFactor =EH;
+//				 T1->balFactor=EH;break;
+//		case RH: T->balFactor =EH;
+//				 T1->balFactor= LH;break;		 	 	 
+//	}
+//	T2->balFactor = EH;
+//	T = T2;
+//}
+////quay kep Right-Left
+//void rotateRL(AVLTree &T){
+//	AVLTree  T1 = T->pRight;
+//	AVLTree  T2 = T->pLeft;
+//	
+//	T->pRight = T2->pLeft;
+//	T2->pLeft = T;
+//	T1->pLeft = T2->pRight;
+//	T2->pRight = T1;
+//	switch(T2->balFactor){
+//		case RH: T->balFactor = LH;
+//			     T1->balFactor = EH;break;
+//		case EH: T->balFactor = EH;
+//				 T1->balFactor =EH; break;
+//		case LH: T->balFactor = EH;
+//				 T1->balFactor = RH; break;
+//				 		 	     
+//	}
+//	T2->balFactor = EH;
+//	T = T2;
+//	
+//}
+//// CAN BANG KHI CAY BI LECH VE BEN TRAI
+//int BalanceLeft(AVLTree &T){
+//	AVLTree  T1 = T->pLeft;
+//	
+//	switch(T1->balFactor){
+//		case LH: rotateLL(T); return 2;
+//		case EH: rotateLL(T); return 1;
+//		case RH: rotateLR(T); return 2;
+//			
+//	}
+//	return 0;
+//}
+//// CAN BANG KHI CAY BI LECH VE BEN PHAI
+//int BalanceRight(AVLTree &T){
+//	AVLNode *T1 = T->pRight;
+//	switch(T1->balFactor){
+//		case LH: rotateRL(T); return 2;
+//		case EH: rotateRR(T); return 1;
+//		case RH: rotateRR(T); return 2;
+//	}
+//	return 0;
+//}
+//// viec them 1pt vao AVL, neu them xong, chieu cao cay thay doi
+//// tu vi tri them vao, ta phai lan nguocc len goc de kiem tra xem co nut nao bi 
+//// mat can bang khong, neu co , ta phai can bang lai o nut nay
+//// viec can bang lai chi can thuc ien 1 lan tai noi mat can bang
+////ham insert tra ve -1,0,1 khi khong du bo nho, gap nut cu hay thanh cong, 
+////neu sau khi them, chieu cao cay bi tang, gia tri 2 se return;
+//int insertNode(AVLTree &T,HanhKhach data){
+//	int res;
+//	if(T){
+//		if(T->data == data){
+//			return 0; // da co
+//		}
+//		if(T->data > X){
+//			res = insertNode(T->pLeft,data);
+//			if(res < 2) return res;
+//			switch(T->balFactor){
+//				case RH: T->balFactor = EH;
+//						return 1;
+//				case EH: T->balFactor = LH;
+//						return 2;
+//				case LH: BalanceLeft(T); return 1;
+//			}
+//		}else{
+//			res = insertNode(T->pRight,data);
+//			if(res < 2)return res;
+//			switch(T->balFactor){
+//				case LH: T->balFactor = EH;
+//						return 1;
+//				case EH: T->balFactor = RH;
+//						return 2;
+//				case RH: BalanceRight(T); return 1;				
+//			}
+//		}
+//		
+//	}
+//	T = new AVLNode;
+//	if(T == NULL) return -1; // thieu bo nho
+//	T->data = data; T->balFactor = EH;
+//	T->pLeft = T->pRight = NULL;
+//	return 2; // thanh cong, chieu cao tang
+//	
+//}
+////HUY 1 PT TREN CAY AVL
+//// viec can bang lai cay sau khi huy se phuc tap hon so voi them vao
+//int DelNode(AVLTree &T, HanhKhanh data){
+//	int res;
+//	if(T == NULL)return 0;
+//	if(T->data > data){
+//		res = DelNode(T->pLeft,data);
+//		if(res < 2)return res;
+//		switch(T->balFactor){
+//			case LH: T->balFactor = EH;
+//					 return 2;
+//			case EH: T->balFactor = RH;
+//					 return 1;
+//			case RH: return BalanceRight(T);
+//		}
+//		
+//	}
+//	if(T->data <data){
+//		res = DelNode(T->pRight,data);
+//		if(res < 2) return res;
+//		switch(T->balFactor){
+//			case RH: T->balFactor = EH;
+//					 return 2;
+//			case EH: T->balFactor = LH;
+//					 return 1;
+//			case LH: return BalanceLeft(T);
+//					 		 
+//		}
+//	}else {// T->DATA = DATA}
+//		AVLNode *p = T;
+//		if(T->pLeft == NULL){
+//			T = T->pRight;res = 2;
+//			
+//		}else if(T->pRight == NULL){
+//			T = T->pLeft; res = 2;
+//		}else{ // T co ca 2 con
+//			res = SearchStandFor(p,T->pRight);
+//			if(res < 2)return res;
+//			switch(T->balFactor){
+//				case RH: T->balFactor = EH;
+//						return 2;
+//				case EH: T->balFactor = LH;
+//						return 1;
+//				case LH: return BalanceLeft(T);
+//			}
+//		}
+//		
+//		delete p;
+//		return res;
+//	}
+//	
+//}
+//// Tìm phan tu thê' mang
+//int SearchStandFor(AVLTree &p, AVLTree &q){
+//	int res;
+//	if(q->pLeft){
+//		res = SearchStandFor(p,q->pLeft);
+//		if(res < 2)return res;
+//		switch(q->balFactor){
+//			case LH: q->balFactor = EH;
+//					return 2;
+//			case EH: q->balFactor = RH;
+//					return 1;
+//			case RH: return BalanceRight(T);
+//					
+//		}
+//	}else{
+//		p->data = q->data;
+//		p = q;
+//		q = q->pRight;
+//		return 2;
+//	}
+//}
+////=================================================================
+//
+//
+//
+//
+//
+//
+//
+//bool Empty_HK(AVLTree tree_hk)
+//{
+//	return tree_hk == NULL;
+//}
+bool CheckCMNDIsExisted(AVLTree tree_hk, char cmnd[])
+{
+	if (tree_hk != NULL)
+	{
+		if (strcmp(tree_hk->hanhkhach.cmnd, cmnd) == 0)
+			return true;
+		if (strcmp(tree_hk->hanhkhach.cmnd, cmnd) > 0)
+			CheckCMNDIsExisted(tree_hk->pLeft, cmnd);
+		else 
+			CheckCMNDIsExisted(tree_hk->pRight, cmnd);
+	}
+	return false;
+}
+//Node_HK *SearchHK(AVLTree tree_hk, char cmnd[])
+//{
+//	if (tree_hk != NULL)
+//	{
+//		Node_HK *pNode = tree_hk;
+//		while (pNode != NULL)
+//		{
+//			if (strcmp(pNode->hanhkhach.cmnd, cmnd) == 0)
+//				return pNode;
+//			else if (strcmp(pNode->hanhkhach.cmnd, cmnd) > 0)
+//				pNode = pNode->pLeft;
+//			else if (strcmp(pNode->hanhkhach.cmnd, cmnd) < 0)
+//				pNode = pNode->pRight;
+//		}
+//	}
+//	return NULL;
+//}
+
+Node_CB *SearchCB(SingleList_CB lcb, char maCB[])
+{
+	Node_CB *pNode = lcb.pHead;
+	while (pNode != NULL)
+	{
+		if (strcmp(pNode->cb.maCB, maCB) == 0)
+			return pNode;
+		pNode=pNode->pNext;
+	}
+	return NULL;
+}
+
+HanhKhach ThemHanhKhach()
+{
+	HanhKhach *hk = new HanhKhach;
+	cout<<"CMND: ";
+	cin>>hk->cmnd; // check cmnd trung
+	cin.ignore();
+	cout<<"Ho: ";
+	gets(hk->ho);
+	cout<<"Ten: ";
+	gets(hk->ten);
+	cout<<"Phai(0:Nu - 1:Nam): ";
+	cin>>hk->phai;
+	return *hk;
+}
+
+void PrintTree(AVLTree tree_hk)
+{
+	if (tree_hk != NULL)
+	{
+		string gt = "";
+		HanhKhach hk = tree_hk->hanhkhach;
+		
+		gt = hk.phai==0?"Nu":"Nam";
+		cout<<hk.cmnd<<"\t"<<hk.ho<<"\t"<<hk.ten<<"\t"<<gt<<endl;
+		PrintTree(tree_hk->pLeft);
+		PrintTree(tree_hk->pRight);
+	}
+}
+
+
+void InsertHKToTree(AVLTree &tree_hk, HanhKhach hk)
+{
+	if (tree_hk == NULL)
+	{
+		AVLTree node=CreateNode(hk);
+		tree_hk = node;
+	}
+	else
+	{
+		tree_hk = InsertNode(tree_hk,hk);
+		
+	}
+}
+
+//
+//
+
+
+//=======================================================================
+
+int check_Chuoi_Char(char ma[])
+{
+	for(int i = 0; i < strlen(ma); i++){
+//		gotoxy(1,1); cout<<ma[i]<<endl;
+//		system("pause");
+		if (!isdigit(ma[i]))
+			return -1;
+	}
+	return 1;
+} 
+void XoaKiTu(char s[], int vitrixoa)
+{
+	int n = strlen(s);
+	for (int i = vitrixoa + 1; i < n; i++)
+		s[i-1] = s[i];
+	s[n-1] = '\0';
+}
+char *fix_Ma(char *ma)
+{
+	if( strcmp(ma, "\0") == 0)
+		return ma;
+	int dai = strlen(ma);
+	int dem = 0;
+	for(int i = 0; i < dai; i++)
+	{
+		if (ma[i] == ' ')
+			dem++;
+	}
+	if (dem == dai)
+	{
+		while (true)
+		{
+			if (ma[0] == ' ')
+				XoaKiTu(ma, 0);
+			else if (ma[strlen(ma)-1] == ' ')
+				XoaKiTu(ma, strlen(ma)-1);
+			else
+				break;
+		}
+		return ma;
+	}
+		
+	while (true)
+	{
+		if (ma[0] == ' ')
+			XoaKiTu(ma, 0);
+		else if (ma[strlen(ma)-1] == ' ')
+			XoaKiTu(ma, strlen(ma)-1);
+		else
+			break;
+	}
+	// Xoa khoang tang o giua
+	for (int i = 0; i < strlen(ma) - 1; i++)
+	{
+		if ((ma[i] == ' ' && ma[i+1] == ' ') || (ma[i] == ' ' && ma[i+1] != ' '))
+		{
+			XoaKiTu(ma, i);
+			i--;
+		}
+	}
+	if (strcmp(ma, "") != 0)
+	{
+		// Chuyen chu thuong thanh chu hoa
+		for (int i = 0; i < strlen(ma); i++)
+		{
+			if (ma[i] >= 'a' && ma[i] <= 'z')
+				ma[i] -= 32;
+		}
+	}
+	return ma;
+}
+
+
+char *tach_Ten(char str[])
+{
+	char *ten = new char[100];
+	
+	for (int i = strlen(str)-1; i >= 0; i--)
+		if (str[i] == ' ')
+		{
+			int k = 0;
+			for (int j = i + 1; j < strlen(str); j++)
+			{
+				ten[k++] = str[j];
+			}
+			ten[k]='\0';
+			break;
+		}
+	return ten;
+}
+
+char *tach_ho_dem(char str[])
+{
+	char *hodem = new char[100];
+
+	for (int i = strlen(str)-1; i >= 0; i--)
+		if (str[i] == ' ')
+		{
+			int k = 0;
+			for (int j = 0; j < i; j++)
+			{
+				hodem[k++] = str[j];
+			}
+			hodem[k]='\0';
+			break;
+		}
+	return hodem;
+}
+char *fix_HoTen(char *hoten)
+{
+	if( strcmp(hoten, "\0") == 0)
+		return hoten;
+		
+	int dai = strlen(hoten);
+	int dem = 0;
+	for(int i = 0; i < dai; i++)
+	{
+		if (hoten[i] == ' ')
+			dem++;
+	}
+	if (dem == dai)
+	{
+		while (true)
+		{
+			if (hoten[0] == ' ')
+				XoaKiTu(hoten, 0);
+			else if (hoten[strlen(hoten)-1] == ' ')
+				XoaKiTu(hoten, strlen(hoten)-1);
+			else
+				break;
+		}
+		return hoten;
+	}
+	// Xoa khoang trang dau va cuoi
+	while (true)
+	{
+		if (hoten[0] == ' ')
+			XoaKiTu(hoten, 0);
+		else if (hoten[strlen(hoten)-1] == ' ')
+			XoaKiTu(hoten, strlen(hoten)-1);
+		else
+			break;
+	}
+	// Xoa khoang tang o giua
+	for (int i = 0; i < strlen(hoten) - 1; i++)
+	{
+		if (hoten[i] == ' ' && hoten[i+1] == ' ')
+		{
+			XoaKiTu(hoten, i);
+			i--;
+		}
+	}
+	// Chuyen Hoa thanh thuong
+	for(int i = 0; i < strlen(hoten); i++)
+		if(hoten[i] >= 'A' && hoten[i] <= 'Z') hoten[i] += 32;
+	
+	hoten[0] = hoten[0] - 32; // In hoa Ki tu dau tien
+	
+	for(int i = 1;i < strlen(hoten); i++) // In hoa chu cai dau tien sau moi khoang trang
+	{
+		if(hoten[i] == ' ')
+		{
+			if(hoten[i+1] >= 'a' && hoten[i+1] <= 'z')
+			{
+				hoten[i+1] -= 32;
+				i = i+1;
+			}
+		}
+	}
+	return hoten;
+}
+char *fix_Ten(char *ma)
+{
+	if( strcmp(ma, "\0") == 0)
+		return ma;
+	int dai = strlen(ma);
+	int dem = 0;
+	for(int i = 0; i < dai; i++)
+	{
+		if (ma[i] == ' ')
+			dem++;
+	}
+	if (dem == dai)
+	{
+		while (true)
+		{
+			if (ma[0] == ' ')
+				XoaKiTu(ma, 0);
+			else if (ma[strlen(ma)-1] == ' ')
+				XoaKiTu(ma, strlen(ma)-1);
+			else
+				break;
+		}
+		return ma;
+	}
+		
+	while (true)
+	{
+		if (ma[0] == ' ')
+			XoaKiTu(ma, 0);
+		else if (ma[strlen(ma)-1] == ' ')
+			XoaKiTu(ma, strlen(ma)-1);
+		else
+			break;
+	}
+	// Xoa khoang tang o giua
+	for (int i = 0; i < strlen(ma) - 1; i++)
+	{
+		if ((ma[i] == ' ' && ma[i+1] == ' ') || (ma[i] == ' ' && ma[i+1] != ' '))
+		{
+			XoaKiTu(ma, i);
+			i--;
+		}
+	}
+
+	// Chuyen Hoa thanh thuong
+	for(int i = 0; i < strlen(ma); i++)
+		if(ma[i] >= 'A' && ma[i] <= 'Z') ma[i] += 32;
+	
+	ma[0] = ma[0] - 32; // In hoa Ki tu dau tien
+	return ma;
+}
+
+char *fix_GioiTinh(char *phai)
+{
+	if (strcmp(phai, "\0") == 0)
+		return phai;
+		
+	int dai = strlen(phai);
+	int dem = 0;
+	for (int i = 0; i < dai; i++)
+	{
+		if (phai[i] == ' ')
+			dem++;
+	}
+	if (dem == dai)
+	{
+		while (true)
+		{
+			if (phai[0] == ' ')
+				XoaKiTu(phai, 0);
+			else if (phai[strlen(phai)-1] == ' ')
+				XoaKiTu(phai, strlen(phai)-1);
+			else
+				break;
+		}
+		return phai;
+	}
+	// Xoa khoang trang dau va cuoi
+	while (true)
+	{
+		if (phai[0] == ' ')
+			XoaKiTu(phai, 0);
+		else if (phai[strlen(phai)-1] == ' ')
+			XoaKiTu(phai, strlen(phai)-1);
+		else
+			break;
+	}
+	
+	// Chuyen Hoa thanh thuong
+	for(int i = 0; i < strlen(phai); i++)
+		if(phai[i] >= 'A' && phai[i] <= 'Z') phai[i] += 32;
+	return phai;
+}
+
+void LuuFileHanhKhach(AVLTree tree_hk, ofstream &fileout)
+{
+	if (tree_hk != NULL)
+	{
+		fileout<<tree_hk->hanhkhach.cmnd<< ","<<tree_hk->hanhkhach.ho<<" "<<tree_hk->hanhkhach.ten<<","<<tree_hk->hanhkhach.phai;
+		LuuFileHanhKhach(tree_hk->pLeft, fileout);
+		LuuFileHanhKhach(tree_hk->pRight, fileout);
+	}
+}
+void LuuFileHKKoDeQuy(AVLTree tree_hk)
+{
+	ofstream fileout;
+	fileout.open("hanhkhach.txt", ios::out);
+	if (fileout.fail())
+	{
+		cout<<"Loi mo file hanh khach";
+		return;
+	}
+	const int STACKSIZE = 10000;
+	AVLTree Stack[STACKSIZE];
+	AVLTree p = tree_hk;
+	int sp = -1; //Khai bao Stack rong
+	do
+	{
+		while(p!=NULL)
+		{
+			Stack[++sp] = p;
+			p = p->pLeft;
+		}
+		if (sp != -1)
+		{
+			p = Stack[sp--];
+			fileout<<p->hanhkhach.cmnd<<","<<p->hanhkhach.ho<<" "<<p->hanhkhach.ten<<","<<p->hanhkhach.phai<<endl;
+			p = p->pRight;
+		}
+		else break;
+	}while(1);
+}
+
+void DocFileHanhKhach(AVLTree &tree_hk)
+{
+	ifstream filein;
+	filein.open("hanhkhach.txt", ios::in);
+	HanhKhach hk;
+	string tmp; // lay ky tu xuong dong 
+	do{
+		string cmnd, hoten;
+	
+		getline(filein, cmnd, ',');
+		if(cmnd != ""){
+			strcpy(hk.cmnd, cmnd.c_str());
+			
+			getline(filein, hoten, ',');
+			char ho[100], ten[100], hotenc[200];
+			strcpy(hotenc, hoten.c_str());
+			
+			strcpy(hk.ho, tach_ho_dem(hotenc));
+		
+			strcpy(hk.ten, tach_Ten(hotenc));
+		
+			filein>>hk.phai;
+		
+			getline(filein, tmp);
+			InsertHKToTree(tree_hk, hk);
+		}
+	}while(!filein.eof());
+	filein.close();
+}
+
+
+
+// =================================
+
+// ========== VE ===================
+
+
+
+void initListVe(ListVe &dsVe, int soCho){
+	dsVe.n = 0;
+	dsVe.ve = new string[soCho];
+	for(int i = 0; i < soCho; i++ )
+	{
+//		strcpy(dsVe.ve[i], "");
+		dsVe.ve[i] = "";
+		//cout<<i<<"-"<<dsVe.ve[i]<<"-"<<dsVe.ve[i].length()<<endl;
+//		strcpy(dsVe.ve[i].cmnd, "");
+	}
+}
+
+bool InsertVe(ListVe &list, int soGhe, string cmnd)
+{
+	
+	if ((list.ve[soGhe-1].length()) > 0)
+		return false;
+	else
+	{
+		
+		list.ve[soGhe-1] = cmnd;
+		list.n++;
+		return true;
+	}
+}
+bool DeleteVe(ListVe &list, int soGhe)
+{
+	
+	if ((list.ve[soGhe-1].length()) > 0){
+		list.ve[soGhe-1] = "";
+		list.n--;
+		return true;
+	}else{
+		return false;
+	}
+}
+//bool CheckHK(ListVe list)
+//{
+//	//danh sach rong , khong ton tai hanh khach
+//	if (list.n == 0)
+//		return true;
+//	int dem = 0;
+//	for (int i = 0; i < list.n; i++)
+//	{
+//		if (strcmp(list.ve[i].hk.cmnd, "") == 0)
+//			dem++;
+//	}	
+//	// may bay moi chua co hk nao
+//	if (dem == list.n)
+//		return true;
+//	else
+//	
+//}
+
+// ==================================
+
+
+
+// ========== CHUYEN BAY ============
+
+
+int Empty_MB(ListMayBay dsMB)
+{
+	return dsMB.soluong == 0;
+}
+int Full_MB(ListMayBay dsMB)
+{
+	return dsMB.soluong == MAXMB;
+}
+
+void Init_CB(SingleList_CB &listCB)
+{
+	listCB.pHead = listCB.pTail = NULL;
+}
+
+int Dem(SingleList_CB lcb, char soHieu[])
+{
+	int dem = 0;
+	Node_CB *pNode = lcb.pHead;
+	while (pNode != NULL)
+	{
+		if (strcmp(pNode->cb.soHieuMB, soHieu) == 0)
+			if (pNode->cb.trangThai == 3)
+				dem++;
+		pNode = pNode->pNext;
+	}
+	return dem;
+}
+
+int getsocho(ListMayBay lmb, char soHieu[])
+{
+	for (int i = 0; i < lmb.soluong; i++)
+	{
+		if (strcmp(lmb.maybay[i]->soHieuMB, soHieu) == 0)
+			return lmb.maybay[i]->soCho;
+	}
+	return -1;
+}
+
+void LuuFileChuyenBay(SingleList_CB listCB, ListMayBay lmb)
+{
+	ofstream fileout;
+	fileout.open("chuyenbay.txt", ios::out);
+	Node_CB *pTmp = listCB.pHead;
+	for ( ; pTmp != NULL; pTmp=pTmp->pNext)	{
+		ChuyenBay cb;
+		cb = pTmp->cb;
+		fileout << cb.soHieuMB << endl;
+		fileout << cb.maCB << "," 
+				<< cb.tgKhoiHanh.ngay << "/" 
+				<< cb.tgKhoiHanh.thang << "/" 
+				<< cb.tgKhoiHanh.nam << ","
+				<< cb.tgKhoiHanh.gio << ":"
+				<< cb.tgKhoiHanh.phut << endl;
+		fileout << cb.sanBayDen <<endl;
+		fileout << cb.trangThai <<endl;
+		int socho = getsocho(lmb, cb.soHieuMB);
+		for(int vitri = 0; vitri < socho; vitri++){
+			if((cb.dsVe.ve[vitri].length() > 0))
+			{
+				gotoxy(1,1); cout << cb.dsVe.ve[vitri].length();
+				fileout << vitri+1 << "-" << cb.dsVe.ve[vitri] << endl;
+			}
+		}
+		fileout << endl << endl;
+	}
+
+	fileout.close();
+}
+
+
+void LuuFileMayBay(ListMayBay listMB, ofstream &fileout)
+{
+	fileout << listMB.soluong<<endl;
+	for (int i = 0; i < listMB.soluong; i++)
+	{
+		fileout << listMB.maybay[i]->soHieuMB << ","<<listMB.maybay[i]->loaiMB << ","<<listMB.maybay[i]->soCho<<endl;
+	}
+	
+	fileout.close();
+}
+int Insert_MB(ListMayBay &listMB, MayBay mb)
+{
+	int empty = Empty_MB(listMB);
+	int full = Full_MB(listMB);
+	if (empty == 1)
+	{
+		listMB.maybay[0] = new MayBay;
+ 		strcpy(listMB.maybay[0]->soHieuMB, mb.soHieuMB);
+		listMB.maybay[0]->soCho = mb.soCho;
+		strcpy(listMB.maybay[0]->loaiMB , mb.loaiMB);
+		listMB.soluong = 1;
+		return 1;
+	}
+	else if (full)
+	{
+		return -1;
+	}
+		
+	else
+	{
+		listMB.maybay[listMB.soluong] = new MayBay;
+		strcpy(listMB.maybay[listMB.soluong]->soHieuMB, mb.soHieuMB);
+		listMB.maybay[listMB.soluong]->soCho = mb.soCho;
+		strcpy(listMB.maybay[listMB.soluong]->loaiMB , mb.loaiMB);
+		listMB.soluong++;
+		return 1;
+	}
+}
+void DocFileMayBay(ListMayBay &listmb)
+{
+	ifstream filein;
+	filein.open("maybay.txt", ios::in);
+	int n; // get so luong may bay
+	listmb.soluong = 0;
+	string tmp;
+	
+	filein>>n;
+	
+	getline(filein,tmp);
+	for (int i = 0; i < n; i++)
+	{
+
+		MayBay mb;
+		getline(filein, tmp, ',');
+		strcpy(mb.soHieuMB, tmp.c_str());
+		
+		getline(filein, tmp, ',');
+		strcpy(mb.loaiMB, tmp.c_str());
+		
+		
+		filein >> mb.soCho;
+		getline(filein, tmp);
+		
+		Insert_MB(listmb, mb);
+	}
+	filein.close();
+}
+
+bool Check_ThoiGian_ChuyenBay(ThoiGian tg);
+void InsertLast_CB(SingleList_CB &lcb, ChuyenBay cb);
+string *splitToTwoString(const string str, char splitchar);
+void DocFileChuyenBay(SingleList_CB &lcb, ListMayBay lmb)
+{
+	ifstream filein;
+	filein.open("chuyenbay.txt", ios::in);
+	string tmp; 
+	do
+	{
+		ChuyenBay cb;
+		
+		getline(filein, tmp);
+		if (tmp != ""){
+			strcpy(cb.soHieuMB, tmp.c_str());
+			
+			getline(filein, tmp, ',');
+			strcpy(cb.maCB, tmp.c_str());
+//			cout<<cb.maCB<<endl;
+			getline(filein, tmp, '/');
+			cb.tgKhoiHanh.ngay = atoi(tmp.c_str());
+			
+			getline(filein, tmp, '/');
+			cb.tgKhoiHanh.thang = atoi(tmp.c_str());
+			
+			getline(filein, tmp, ',');
+			cb.tgKhoiHanh.nam = atoi(tmp.c_str());
+			
+			getline(filein, tmp, ':');
+			cb.tgKhoiHanh.gio = atoi(tmp.c_str());
+			
+			getline(filein, tmp);
+			cb.tgKhoiHanh.phut = atoi(tmp.c_str());
+			
+			
+			getline(filein, tmp);
+			strcpy(cb.sanBayDen, tmp.c_str());
+
+			getline(filein, tmp);
+			cb.trangThai = atoi(tmp.c_str());
+			if (Check_ThoiGian_ChuyenBay(cb.tgKhoiHanh) == false)
+				cb.trangThai = 3;
+				
+			initListVe(cb.dsVe, getsocho(lmb, cb.soHieuMB));
+
+			string tmp1 = "";
+			getline(filein, tmp1);
+			
+			while(tmp1 != "")
+			{
+				string *arrVe = splitToTwoString(tmp1, '-');
+				string ghe = arrVe[0];
+				string cmnd = arrVe[1];
+
+				
+				InsertVe(cb.dsVe, atoi(ghe.c_str()), cmnd);
+				getline(filein, tmp1);
+				
+			}
+			
+			InsertLast_CB(lcb, cb);
+			tmp = "";
+		}
+		
+	}while (!filein.eof());
+}
+
+string* splitToTwoString(const string str, char splitchar){
+	int pos = 0;
+	string* arr = new string[2];
+	arr[0] = "";
+	arr[1] = "";
+	for(pos; pos < str.length();pos ++){
+		if(str.at(pos) == splitchar){
+			arr[0] = str.substr(0,pos); // 12-
+			arr[1] = str.substr(pos+1, str.length()-pos);
+		}
+	}
+	return arr;
+}
+
+int CheckSoHieu_MB(ListMayBay listMB, char sohieu[])
+{
+	if (Empty_MB(listMB))
+		return -1;
+	else
+	{
+		for (int i = 0; i < listMB.soluong; i++)
+		{
+			if (stricmp(listMB.maybay[i]->soHieuMB, sohieu) == 0)
+				return i;
+		}
+		return -1;
+	}
+}
+
+int Check_MaCB(SingleList_CB listCB, char macb[])
+{
+	Node_CB *pTmp = listCB.pHead;
+	if (pTmp == NULL)
+		return -1;
+	else
+	{
+		for (; pTmp != NULL; pTmp=pTmp->pNext)
+		{
+			if (strcmp(pTmp->cb.maCB, macb) == 0)
+				return 1;
+		}
+	}
+	return -1;
+}
+
+int Check_NoiDen(SingleList_CB lcb, char noiden[])
+{
+	Node_CB *pTmp = lcb.pHead;
+	if (pTmp == NULL) return -1;
+	else
+	{
+		for (; pTmp != NULL; pTmp=pTmp->pNext)
+		{
+			if (strcmp(pTmp->cb.sanBayDen, noiden) == 0)
+				return 1;
+		}
+	}
+	return -1;
+}
+
+
+int CheckHKTrongCB(ListVe lv, int socho, char cmnd[])
+{
+	for(int i = 0; i < socho; i++)
+	{
+		if (lv.ve[i] == cmnd)
+			return 1;
+	}
+	return -1;
+}
+bool CheckHKTrongCB(ListVe lv, int socho)
+{
+	for(int i = 0; i < socho; i++)
+	{
+		if (lv.ve[i] != "")
+			return true;
+	}
+	return false;
+}
+
+
+void Delete_MB(ListMayBay &listMB, char sohieu[])
+{
+	for (int i = 0; i < listMB.soluong; i++)
+	{
+		if (strcmp(listMB.maybay[i]->soHieuMB, sohieu) == 0)
+		{
+			MayBay* temp = listMB.maybay[i];
+			int j = i+1;
+			for( j ; j < listMB.soluong; j++){
+				listMB.maybay[i] = listMB.maybay[j];
+				i = j;
+			}
+			delete temp;
+			listMB.maybay[j] = NULL;
+			listMB.soluong--;
+			cout<<"Da xoa\n";
+			break;
+		}
+		
+	}
+	
+}
+
+void Xuat_MB(ListMayBay listMB)
+{
+	cout<<"So luong: "<<listMB.soluong<<endl;
+	for (int i = 0; i < listMB.soluong; i++)
+	{
+		cout<<listMB.maybay[i]->soHieuMB<<"\t"<<listMB.maybay[i]->loaiMB<<"\t"<<listMB.maybay[i]->soCho<<endl;
+	}
+}
+
+
+// =======================
+
+
+
+
+
+Node_CB *CreateNode_CB(ChuyenBay cb_moi)
+{
+	Node_CB *pNode = new Node_CB;
+	if(pNode != NULL)
+	{
+		pNode->cb = cb_moi;
+		pNode->pNext = NULL;
+	}
+	else
+		cout<<"Tao Node_CB that bai";
+	return pNode;
+}
+
+void InsertLast_CB(SingleList_CB &listCB, ChuyenBay cb_moi)
+{
+	Node_CB *pNode = CreateNode_CB(cb_moi);
+	if (listCB.pHead == NULL)
+	{
+		listCB.pHead = listCB.pTail = pNode;
+	}
+	else
+	{
+		listCB.pTail->pNext = pNode;
+		listCB.pTail = pNode;
+	}
+}
+
+Node_CB * TimKiem_CB(SingleList_CB listCB, char maCB[])
+{
+	for (Node_CB *pNode = listCB.pHead; pNode != NULL; pNode = pNode->pNext)
+	{
+		if (strcmp(pNode->cb.maCB, maCB) == 0)
+			return pNode;
+	}
+	return NULL;
+}
+
+bool Delete_CB_Theo_Ma(SingleList_CB &listCB, char ma[])
+{
+	Node_CB *pDel = listCB.pHead;
+	if (pDel == NULL)
+		return false;
+	else
+	{
+		Node_CB *pPre = NULL;
+		while (pDel != NULL)
+		{
+			if (strcmp(pDel->cb.maCB, ma) == 0)
+				break;
+			pPre = pDel;
+			pDel = pDel->pNext;
+		}
+		if (pDel == NULL)
+		{
+			return false;
+		}
+		else
